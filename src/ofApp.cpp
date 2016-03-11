@@ -5,7 +5,6 @@
 void ofApp::setup(){
     x,y = 0;
     velocity.set(1,1);
-//    fbo.allocate(ofGetWidth(),ofGetHeight(),GL_RGBA); //or GL_RED if you are using the programmable renderer
     shader.load("shaders/shader");
     videos = { "/Users/azar/Downloads/0001 1000-zRvnAgQalZE.mp4", "/Users/azar/Downloads/gffg-TQOzY5tmOMk.mp4" };
     images = {
@@ -34,6 +33,8 @@ void ofApp::update(){
     }
     if (random() < 0.0001) {
         texture.load(images.at(rand() % images.size()));
+        x=0;
+        y=0;
     }
 }
 
@@ -41,19 +42,27 @@ void ofApp::update(){
 void ofApp::draw(){
     int width = ofGetWidth();
     int height = ofGetHeight();
+    int textureWidth = texture.getWidth();
+    int textureHeight = texture.getHeight();
+    int textureX = textureWidth/2;
+    int textureY = textureHeight/2;
     
     
-    if (x > ofGetWidth()/2 || x < -ofGetWidth()/2) {
+    //TODO: handle textures that are longer than they are wide
+    if (x < -textureWidth+width || x > 0) {
         velocity.x = -velocity.x;
     }
-    if (y > ofGetHeight()/2 || y < -ofGetHeight()/2) {
+    if (y < -textureHeight+height || y > 0) {
         velocity.y = -velocity.y;
     }
 
     
     ofPushMatrix();
     ofTranslate(x+=velocity.x,y+=velocity.y);
-    texture.draw(-texture.getWidth()/2,-texture.getHeight()/2);
+    if (textureX < width) {
+        textureX = 0;
+    }
+    texture.draw(0,0);
     ofPopMatrix();
     shader.begin();
     currVid.draw(0,0,width,height);
@@ -69,6 +78,8 @@ void ofApp::keyPressed(int key){
     }
     if (key == (int) '2') {
         texture.load(images.at(rand() % images.size()));
+        x=0;
+        y=0;
     }
 }
 
