@@ -6,33 +6,23 @@ void ofApp::setup(){
     x,y = 0;
     velocity.set(1,1);
     shader.load("shaders/shader");
-    videos = { "/Users/azar/Downloads/0001 1000-zRvnAgQalZE.mp4", "/Users/azar/Downloads/gffg-TQOzY5tmOMk.mp4" };
-    images = {
-        "images/16-01_3000_k3.png",
-        "/Users/azar/Downloads/09-2_4096_k3.png",
-        "/Users/azar/Downloads/output.20160224T225001 2/7_1024_k5.png",
-        "images/09-2_4096_k3.png",
-        "images/14-02_3000_k3.png",
-        "images/14-02_3000_k7.png",
-        "images/14-02_3000_k11.png",
-        "images/18-01_3000_k3.png",
-        "images/18-01_3000_k7.png",
-
-    };
-    currVid.load(videos.at(0));
-    texture.load(images.at(0));
+    videos = ofDirectory("/Users/azar/tmp/SAM remix/videos/").getFiles();
+    images = ofDirectory("/Users/azar/tmp/SAM remix/images/").getFiles();
+    currVid.load(videos.at(0).getAbsolutePath());
+    texture.load(images.at(0).getAbsolutePath());
     currVid.play();
+    fbo.allocate(ofGetWidth(),ofGetHeight());
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     currVid.update();
     if (random() < 0.0001) {
-        currVid.load(videos.at(rand() % videos.size()));
+        currVid.load(videos.at(rand() % videos.size()).getAbsolutePath());
         currVid.play();
     }
     if (random() < 0.0001) {
-        texture.load(images.at(rand() % images.size()));
+        texture.load(images.at(rand() % images.size()).getAbsolutePath());
         x=0;
         y=0;
     }
@@ -40,15 +30,11 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    int width = ofGetWidth();
-    int height = ofGetHeight();
+    int width = fbo.getWidth();
+    int height = fbo.getHeight();
     int textureWidth = texture.getWidth();
     int textureHeight = texture.getHeight();
-    int textureX = textureWidth/2;
-    int textureY = textureHeight/2;
     
-    
-    //TODO: handle textures that are longer than they are wide
     if (x < -textureWidth+width || x > 0) {
         velocity.x = -velocity.x;
     }
@@ -56,24 +42,24 @@ void ofApp::draw(){
         velocity.y = -velocity.y;
     }
 
-    
+    fbo.begin();
     ofPushMatrix();
     ofTranslate(x+=velocity.x,y+=velocity.y);
-    if (textureX < width) {
-        textureX = 0;
-    }
+
     texture.draw(0,0);
     ofPopMatrix();
     shader.begin();
     currVid.draw(0,0,width,height);
     shader.setUniform1f("threshold", .88);
     shader.end();
+    fbo.end();
+    fbo.draw(0,0,width,height);
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     if (key == (int) '1') {
-        currVid.load(videos.at(rand() % videos.size()));
+        currVid.load(videos.at(rand() % videos.size()).getAbsolutePath());
         currVid.play();
     }
     if (key == (int) '2') {

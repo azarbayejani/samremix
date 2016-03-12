@@ -10,8 +10,8 @@ class ofApp : public ofBaseApp{
     ofImage texture;
     ofFbo fbo;
     ofShader shader;
-    std::vector<string> videos;
-    std::vector<string> images;
+    std::vector<ofFile> videos;
+    std::vector<ofFile> images;
     
 	public:
 		void setup();
