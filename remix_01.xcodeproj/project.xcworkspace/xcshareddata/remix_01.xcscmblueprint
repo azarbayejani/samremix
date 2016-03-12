@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "A58D23C4BDF8176ABA96E8F10EB9A31E3812D0F2",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "E1973EE936B32FD6C1A9080FB86363F99151DFAC" : 0,
+    "A58D23C4BDF8176ABA96E8F10EB9A31E3812D0F2" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "EF386EF8-B4BB-4C68-A751-4D89E62C119A",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "E1973EE936B32FD6C1A9080FB86363F99151DFAC" : "..\/..\/addons\/ofxBeat",
+    "A58D23C4BDF8176ABA96E8F10EB9A31E3812D0F2" : "remix_01\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "remix_01",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "remix_01.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:azarbayejani\/samremix.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "A58D23C4BDF8176ABA96E8F10EB9A31E3812D0F2"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/darrenmothersele\/ofxBeat.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E1973EE936B32FD6C1A9080FB86363F99151DFAC"
+    }
+  ]
+}
