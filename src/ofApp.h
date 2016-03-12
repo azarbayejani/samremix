@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxBeat.h"
 
 class ofApp : public ofBaseApp{
 
@@ -12,6 +13,10 @@ class ofApp : public ofBaseApp{
     ofShader shader;
     std::vector<ofFile> videos;
     std::vector<ofFile> images;
+    
+    ofxBeat beat;
+    bool drawTexture;
+    float threshold;
     
 	public:
 		void setup();
@@ -29,5 +34,7 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+    
+    void audioReceived(float*, int, int);
 		
 };
