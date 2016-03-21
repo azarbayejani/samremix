@@ -39,13 +39,14 @@ void ofApp::update(){
     
     beat.update(ofGetElapsedTimeMillis());
     if (beat.isKick()) {
-        velocity.set(ofRandom(0.99,1.01), ofRandom(0.99,1.01));
+        velocity.set(ofRandom(0.99,1.01)*(ofRandom(1,2)), ofRandom(0.99,1.01)*(ofRandom(1,2)));
+        //velocity.rotate(ofRandom(TWO_PI), ofVec3f(0,0,1));
     }
     if (beat.isSnare()) {
         drawTexture = !drawTexture;
     }
-    if (beat.isHat()) {
-        threshold = ofRandom(0,0.88);
+    if (beat.isHat() || ofRandom(0,1) < 0.3) {
+        threshold = ofRandom(0.5,0.88);
     }
 }
 
@@ -58,24 +59,28 @@ void ofApp::draw(){
     int height = fbo.getHeight();
     int textureWidth = texture.getWidth();
     int textureHeight = texture.getHeight();
-    
-    if (x < -textureWidth+width || x > 0) {
+
+    x+=velocity.x;
+    y+=velocity.y;
+    if (x + width > textureWidth || x < 0) {
         velocity.x = -velocity.x;
     }
-    if (y < -textureHeight+height || y > 0) {
+    if (y + height > textureHeight ||y < 0) {
         velocity.y = -velocity.y;
     }
+//
     
-    fbo.begin();
     ofPushMatrix();
-    ofTranslate(x+=velocity.x,y+=velocity.y);
+    ofTranslate(-x,-y);
     
-    if(drawTexture){
-        texture.draw(0,0);
-    }
+    texture.draw(0,0);
     ofPopMatrix();
+    fbo.begin();
+    if(drawTexture){
+        ofClear(0);
+    }
     shader.begin();
-    currVid.draw(0,0,width,height);
+    currVid.draw(0,height/4,width,height/2);
     shader.setUniform1f("threshold", threshold);
     shader.end();
     fbo.end();
