@@ -4,15 +4,18 @@
 #include "ofxBeat.h"
 
 class ofApp : public ofBaseApp{
+    
+    float THRESHOLD;
 
     int x,y;
     ofPoint velocity;
     ofVideoPlayer currVid;
-    ofImage texture;
-    ofFbo fbo;
-    ofShader shader;
+    ofImage texture, texture2;
+    ofFbo fbo, fbo2;
+    ofShader shader, redShader;
     std::vector<ofFile> videos;
     std::vector<ofFile> images;
+    float zf, imgX, imgY, centerX, centerY;
     
     ofxBeat beat;
     bool drawTexture;

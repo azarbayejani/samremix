@@ -1,18 +1,27 @@
 #include "ofApp.h"
 
 
+
 //--------------------------------------------------------------
 void ofApp::setup(){
+    THRESHOLD = 0.12;
+    zf = 0.0;
     x,y = 0;
     velocity.set(1,1);
     shader.load("shaders/shader");
-    videos = ofDirectory("/Users/azar/tmp/SAM remix/videos/").getFiles();
+    redShader.load("shaders/red_shader");
+    videos = ofDirectory("/Users/azar/Movies/jlin1/").getFiles();
     images = ofDirectory("/Users/azar/tmp/SAM remix/images/").getFiles();
-    //videos = ofDirectory("/Users/aashishgadani/Sources/Videos/SAM Remix/").getFiles();
-    //images = ofDirectory("/Users/aashishgadani/Sources/Images/Animals").getFiles();
     currVid.load(videos.at(0).getAbsolutePath());
     texture.load(images.at(0).getAbsolutePath());
+    texture2.load(images.at(1).getAbsolutePath());
     currVid.play();
+    currVid.setVolume(0);
+    
+    fbo2.allocate(ofGetWidth(),ofGetHeight());
+    fbo2.begin();
+    ofClear(0);
+    fbo2.end();
     
     fbo.allocate(ofGetWidth(),ofGetHeight());
     fbo.begin();
@@ -28,25 +37,29 @@ void ofApp::update(){
     if (random() < 0.0001) {
         currVid.load(videos.at(rand() % videos.size()).getAbsolutePath());
         currVid.play();
-        threshold = 0.88;
+        threshold = THRESHOLD;
     }
     if (random() < 0.0001) {
         texture.load(images.at(rand() % images.size()).getAbsolutePath());
         x=0;
         y=0;
-        threshold = 0.88;
+        threshold = THRESHOLD;
     }
     
     beat.update(ofGetElapsedTimeMillis());
     if (beat.isKick()) {
         velocity.set(ofRandom(0.99,1.01)*(ofRandom(1,2)), ofRandom(0.99,1.01)*(ofRandom(1,2)));
+        zf = ofRandom(0.1,1.0);
         //velocity.rotate(ofRandom(TWO_PI), ofVec3f(0,0,1));
     }
     if (beat.isSnare()) {
         drawTexture = !drawTexture;
     }
     if (beat.isHat() || ofRandom(0,1) < 0.3) {
-        threshold = ofRandom(0.5,0.88);
+        threshold = ofRandom(0.1,THRESHOLD);
+    }
+    if(zf > 0) {
+        zf -=0.01;
     }
 }
 
@@ -68,22 +81,31 @@ void ofApp::draw(){
     if (y + height > textureHeight ||y < 0) {
         velocity.y = -velocity.y;
     }
-//
     
     ofPushMatrix();
     ofTranslate(-x,-y);
-    
     texture.draw(0,0);
     ofPopMatrix();
-    fbo.begin();
-    if(drawTexture){
-        ofClear(0);
-    }
-    shader.begin();
-    currVid.draw(0,height/4,width,height/2);
-    shader.setUniform1f("threshold", threshold);
-    shader.end();
-    fbo.end();
+    
+    fbo2.begin(); {
+        ofPushMatrix();
+        ofTranslate(-x,-y);
+        texture2.draw(0,0);
+        ofPopMatrix();
+    } fbo2.end();
+    
+
+    fbo.begin(); {
+        if(drawTexture){
+            ofClear(0);
+        }
+        shader.begin(); {
+            currVid.draw(0,0,width*(1+zf),height+(1+zf));
+            shader.setUniform1f("threshold", threshold);
+            shader.setUniform1f("comparator", 1);
+            shader.setUniformTexture("tex", fbo2.getTexture(), 1);
+        } shader.end();
+    } fbo.end();
     fbo.draw(0,0,width,height);
 }
 
